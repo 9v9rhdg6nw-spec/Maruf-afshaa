@@ -27,9 +27,41 @@
     dialog{border:0;padding:0;background:transparent;max-width:min(94vw,1100px);max-height:90vh}.lightbox-wrap{position:relative}.lightbox-wrap img{max-width:94vw;max-height:88vh;display:block;border-radius:24px;box-shadow:0 30px 100px #000}.close{position:absolute;right:12px;top:12px;border:0;width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.55);color:white;font-size:1.4rem;cursor:pointer}dialog::backdrop{background:rgba(0,0,0,.82);backdrop-filter:blur(10px)}
     @media(max-width:850px){.navlinks{display:none}.hero-grid{grid-template-columns:1fr}.portrait-stack{min-height:480px}.hero h1{font-size:clamp(3.9rem,18vw,6rem)}.gallery .photo{grid-column:span 6}.photo:nth-child(1){grid-column:span 12;min-height:430px}.cards{grid-template-columns:1fr 1fr}.moment{grid-template-columns:1fr;gap:8px}.promises{grid-template-columns:1fr}}
     @media(max-width:560px){.section{padding:76px 0}.wrap{width:min(100% - 22px,1120px)}.portrait-stack{min-height:390px}.portrait-main{inset:0 8px 20px 18px;border-radius:30px}.portrait-mini{width:125px;height:160px;left:0}.floating-note{right:0;top:18px;font-size:.78rem}.timer{grid-template-columns:repeat(2,1fr)}.gallery{gap:9px}.gallery .photo,.photo:nth-child(n){grid-column:span 6;min-height:230px}.photo:nth-child(1){grid-column:span 12;min-height:360px}.cards{grid-template-columns:1fr}.video-note{align-items:flex-start;flex-direction:column}.hero-actions .btn{width:100%;text-align:center}.title{font-size:2.6rem}}
+  
+    #loveEntry{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:24px;background:
+      radial-gradient(circle at 50% 30%,rgba(255,77,134,.28),transparent 34%),
+      linear-gradient(160deg,#090307,#1b0914 55%,#080307);transition:opacity .75s ease,visibility .75s ease}
+    #loveEntry.hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .entry-card{width:min(520px,100%);padding:38px 26px;text-align:center;border:1px solid rgba(255,255,255,.16);
+      border-radius:34px;background:rgba(255,255,255,.08);backdrop-filter:blur(22px);
+      box-shadow:0 30px 100px rgba(0,0,0,.5)}
+    .entry-heart{font-size:4rem;animation:pulse 1.2s ease-in-out infinite}
+    .entry-card h2{font-family:Georgia,serif;font-size:clamp(2.2rem,9vw,4.4rem);margin:12px 0 10px}
+    .entry-card p{color:var(--muted);line-height:1.7;margin:0 auto 24px;max-width:390px}
+    #beginLove{border:0;border-radius:999px;padding:15px 24px;color:white;font-weight:700;cursor:pointer;
+      background:linear-gradient(135deg,var(--rose),#b84eec);box-shadow:0 14px 38px rgba(255,77,134,.32)}
+    #musicToggle{position:fixed;right:16px;bottom:18px;z-index:9000;border:1px solid rgba(255,255,255,.18);
+      border-radius:999px;padding:12px 16px;color:white;background:rgba(20,8,15,.72);backdrop-filter:blur(18px);
+      box-shadow:0 12px 34px rgba(0,0,0,.35);cursor:pointer}
+
   </style>
 </head>
 <body>
+
+  <div id="loveEntry" role="dialog" aria-modal="true" aria-label="Begin our love story">
+    <div class="entry-card">
+      <div class="entry-heart">❤️</div>
+      <div class="eyebrow">Maruf &amp; Afshaaa</div>
+      <h2>Our love story</h2>
+      <p>Tap once to begin the journey with our song playing softly in the background.</p>
+      <button id="beginLove">Begin Our Journey ✨</button>
+    </div>
+  </div>
+  <audio id="backgroundMusic" loop preload="auto">
+    <source src="our-song.mp3" type="audio/mpeg">
+  </audio>
+  <button id="musicToggle" type="button" aria-label="Pause background music">⏸ Music</button>
+
   <div id="loader"><div class="loader-inner"><div class="heart-loader">❤️</div><p>Loading our love story…</p></div></div>
   <nav><a class="brand" href="#home">M & A</a><div class="navlinks"><a href="#story">Our Story</a><a href="#memories">Memories</a><a href="#letter">Letter</a></div><a class="navbtn" href="#surprise">For Afshaaa</a></nav>
 
@@ -51,7 +83,7 @@
 
     <section class="section"><div class="wrap"><div class="eyebrow reveal">Things I Love About You</div><h2 class="title reveal">The little things are everything.</h2><div class="cards"><article class="love-card glass reveal"><div class="icon">🥹</div><h3>Your smile</h3><p>It brightens even my darkest days and makes every difficult moment feel lighter.</p></article><article class="love-card glass reveal"><div class="icon">👀</div><h3>Your eyes</h3><p>I love the way they light up when you're happy—and the way you look at me without needing words.</p></article><article class="love-card glass reveal"><div class="icon">🤍</div><h3>Your love</h3><p>You always make me feel appreciated, understood and lucky to be yours.</p></article><article class="love-card glass reveal"><div class="icon">💌</div><h3>Your little efforts</h3><p>You remember the small things that matter, and that means more than I can ever explain.</p></article><article class="love-card glass reveal"><div class="icon">🌍</div><h3>Your presence</h3><p>You make every place feel special just by being there. With you, anywhere can feel like home.</p></article><article class="love-card glass reveal"><div class="icon">📸</div><h3>Our memories</h3><p>I love every moment we have made—and I cannot wait for all the ones still waiting for us.</p></article></div></div></section>
 
-    <section class="section" id="scrapbook"><div class="wrap"><div class="eyebrow reveal">Our Digital Scrapbook</div><h2 class="title reveal">Press play on our story.</h2><p class="subtitle reveal">A collection of our journey, promises, funny moments and dreams—made especially for you.</p><div class="video-shell glass reveal"><video controls playsinline preload="metadata" poster="memory-01.jpeg"><source src="1785427888897937_compressed.mp4" type="video/mp4">Your browser does not support video playback.</video><div class="video-note"><span>Best watched with sound on and your heart open. ❤️</span><a class="btn ghost" href="1785427888897937_compressed.mp4" download>Save video</a></div></div></div></section>
+    <section class="section" id="scrapbook"><div class="wrap"><div class="eyebrow reveal">Our Digital Scrapbook</div><h2 class="title reveal">Press play on our story.</h2><p class="subtitle reveal">A collection of our journey, promises, funny moments and dreams—made especially for you.</p><div class="video-shell glass reveal"><video controls playsinline preload="metadata" poster="memory-01.jpeg"><source src="scrapbook-video.mp4" type="video/mp4">Your browser does not support video playback.</video><div class="video-note"><span>Best watched with sound on and your heart open. ❤️</span><a class="btn ghost" href="scrapbook-video.mp4" download>Save video</a></div></div></div></section>
 
     <section class="section" id="letter"><div class="wrap"><div class="eyebrow reveal">A Letter To My Bae</div><div class="letter glass reveal"><h3>Happy Girlfriend's Day, my bae ❤️</h3><p>Every moment with you has become one of my favourite memories. Thank you for standing by me, making me smile and filling my life with happiness.</p><p>No matter where life takes us, you'll always have a special place in my heart. I cannot wait to make many more beautiful memories with you.</p><p>I love you—today, tomorrow and through every chapter still to come.</p><div class="signature">Forever yours,<br>Maruf ❤️</div></div></div></section>
 
@@ -62,7 +94,62 @@
   <footer>Made with love by Maruf, for Afshaaa · Since 9 November 2024 ❤️</footer>
   <dialog id="lightbox"><div class="lightbox-wrap"><img id="lightboxImg" alt="Expanded memory"><button class="close" aria-label="Close">×</button></div></dialog>
   <script>
-    const loader=document.getElementById('loader');window.addEventListener('load',()=>setTimeout(()=>{loader.style.opacity='0';loader.style.visibility='hidden'},650));
+
+    const loveEntry=document.getElementById('loveEntry');
+    const beginLove=document.getElementById('beginLove');
+    const backgroundMusic=document.getElementById('backgroundMusic');
+    const musicToggle=document.getElementById('musicToggle');
+    const scrapbookVideo=document.querySelector('#scrapbook video');
+    let musicWanted=true;
+
+    beginLove.addEventListener('click',async()=>{
+      loveEntry.classList.add('hidden');
+      try{
+        backgroundMusic.volume=.42;
+        await backgroundMusic.play();
+        musicToggle.textContent='⏸ Music';
+      }catch(e){
+        musicToggle.textContent='▶ Play Music';
+      }
+      setTimeout(()=>loveEntry.remove(),800);
+    });
+
+    musicToggle.addEventListener('click',async()=>{
+      if(backgroundMusic.paused){
+        musicWanted=true;
+        try{await backgroundMusic.play();musicToggle.textContent='⏸ Music'}catch(e){}
+      }else{
+        musicWanted=false;
+        backgroundMusic.pause();
+        musicToggle.textContent='▶ Music';
+      }
+    });
+
+    if(scrapbookVideo){
+      const pauseMusicForVideo=()=>{
+        if(!backgroundMusic.paused){
+          backgroundMusic.pause();
+          musicToggle.textContent='▶ Music';
+        }
+      };
+      scrapbookVideo.addEventListener('pointerdown',pauseMusicForVideo);
+      scrapbookVideo.addEventListener('touchstart',pauseMusicForVideo,{passive:true});
+      scrapbookVideo.addEventListener('play',()=>{
+        if(!backgroundMusic.paused){
+          backgroundMusic.pause();
+          musicToggle.textContent='▶ Music';
+        }
+      });
+      const resumeBackground=async()=>{
+        if(musicWanted){
+          try{await backgroundMusic.play();musicToggle.textContent='⏸ Music'}catch(e){}
+        }
+      };
+      scrapbookVideo.addEventListener('pause',resumeBackground);
+      scrapbookVideo.addEventListener('ended',resumeBackground);
+    }
+
+    const loader=document.getElementById('loader');window.addEventListener('load',()=>{loader.style.display='none'});
     const revealObs=new IntersectionObserver((entries)=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     const start=new Date('2024-11-09T00:00:00');function updateTimer(){let d=Math.max(0,new Date()-start);const days=Math.floor(d/86400000);d%=86400000;const h=Math.floor(d/3600000);d%=3600000;const m=Math.floor(d/60000);const s=Math.floor((d%60000)/1000);daysEl.textContent=days.toLocaleString();hoursEl.textContent=String(h).padStart(2,'0');minutesEl.textContent=String(m).padStart(2,'0');secondsEl.textContent=String(s).padStart(2,'0')}const daysEl=document.getElementById('days'),hoursEl=document.getElementById('hours'),minutesEl=document.getElementById('minutes'),secondsEl=document.getElementById('seconds');updateTimer();setInterval(updateTimer,1000);
     const dialog=document.getElementById('lightbox'),lightImg=document.getElementById('lightboxImg');document.querySelectorAll('.photo img').forEach(img=>img.closest('button').addEventListener('click',()=>{lightImg.src=img.src;lightImg.alt=img.alt;dialog.showModal()}));document.querySelector('.close').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
