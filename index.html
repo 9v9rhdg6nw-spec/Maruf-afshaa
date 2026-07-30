@@ -57,17 +57,15 @@
       <button id="beginLove">Begin Our Journey ✨</button>
     </div>
   </div>
-  <audio id="backgroundMusic" loop preload="auto">
-    <source src="our-song.mp3" type="audio/mpeg">
-  </audio>
-  <button id="musicToggle" type="button" aria-label="Pause background music">⏸ Music</button>
+  <audio id="backgroundMusic" src="./our-song.mp3?v=4" loop preload="auto"></audio>
+  <button id="musicToggle" type="button" aria-label="Play background music">▶ Play Music</button>
 
   <div id="loader"><div class="loader-inner"><div class="heart-loader">❤️</div><p>Loading our love story…</p></div></div>
   <nav><a class="brand" href="#home">M & A</a><div class="navlinks"><a href="#story">Our Story</a><a href="#memories">Memories</a><a href="#letter">Letter</a></div><a class="navbtn" href="#surprise">For Afshaaa</a></nav>
 
   <main>
     <section class="hero" id="home"><div class="wrap hero-grid">
-      <div class="reveal"><div class="eyebrow">Happy Girlfriend's Day</div><h1>Maruf <span>& Afshaaa</span></h1><p class="hero-copy">Every love story is beautiful, but ours will always be my favourite. This little corner of the internet is for every laugh, every memory and every mile we chose each other through.</p><div class="hero-actions"><a class="btn" href="#story">Begin our journey ❤️</a><a class="btn ghost" href="https://www.youtube.com/results?search_query=Jo+Tum+Mere+Ho+Anuv+Jain" target="_blank" rel="noopener">Play our song ♪</a></div></div>
+      <div class="reveal"><div class="eyebrow">Happy Girlfriend's Day</div><h1>Maruf <span>& Afshaaa</span></h1><p class="hero-copy">Every love story is beautiful, but ours will always be my favourite. This little corner of the internet is for every laugh, every memory and every mile we chose each other through.</p><div class="hero-actions"><a class="btn" href="#story">Begin our journey ❤️</a><button class="btn ghost" id="heroMusicButton" type="button">Play our song ♪</button></div></div>
       <div class="portrait-stack reveal"><div class="portrait-main"><img src="memory-01.jpeg" alt="Maruf and Afshaaa smiling together under warm lights"></div><div class="portrait-mini"><img src="memory-02.jpeg" alt="A close joyful selfie of Maruf and Afshaaa"></div><div class="floating-note">Jo tum mere ho… ❤️</div></div>
     </div><div class="scrollhint">Scroll to remember ↓</div></section>
 
@@ -95,58 +93,105 @@
   <dialog id="lightbox"><div class="lightbox-wrap"><img id="lightboxImg" alt="Expanded memory"><button class="close" aria-label="Close">×</button></div></dialog>
   <script>
 
-    const loveEntry=document.getElementById('loveEntry');
-    const beginLove=document.getElementById('beginLove');
-    const backgroundMusic=document.getElementById('backgroundMusic');
-    const musicToggle=document.getElementById('musicToggle');
-    const scrapbookVideo=document.querySelector('#scrapbook video');
-    let musicWanted=true;
+    const loveEntry = document.getElementById('loveEntry');
+    const beginLove = document.getElementById('beginLove');
+    const backgroundMusic = document.getElementById('backgroundMusic');
+    const musicToggle = document.getElementById('musicToggle');
+    const heroMusicButton = document.getElementById('heroMusicButton');
+    const scrapbookVideo = document.querySelector('#scrapbook video');
 
-    beginLove.addEventListener('click',async()=>{
-      loveEntry.classList.add('hidden');
-      try{
-        backgroundMusic.volume=.42;
-        await backgroundMusic.play();
-        musicToggle.textContent='⏸ Music';
-      }catch(e){
-        musicToggle.textContent='▶ Play Music';
+    let musicWanted = false;
+    let videoIsPlaying = false;
+
+    backgroundMusic.volume = 0.55;
+
+    function setMusicButton(isPlaying) {
+      musicToggle.textContent = isPlaying ? '⏸ Pause Music' : '▶ Play Music';
+      musicToggle.setAttribute(
+        'aria-label',
+        isPlaying ? 'Pause background music' : 'Play background music'
+      );
+      if (heroMusicButton) {
+        heroMusicButton.textContent = isPlaying ? 'Pause our song ❚❚' : 'Play our song ♪';
       }
-      setTimeout(()=>loveEntry.remove(),800);
-    });
+    }
 
-    musicToggle.addEventListener('click',async()=>{
-      if(backgroundMusic.paused){
-        musicWanted=true;
-        try{await backgroundMusic.play();musicToggle.textContent='⏸ Music'}catch(e){}
-      }else{
-        musicWanted=false;
-        backgroundMusic.pause();
-        musicToggle.textContent='▶ Music';
+    async function playMusic() {
+      musicWanted = true;
+
+      if (videoIsPlaying && scrapbookVideo) {
+        scrapbookVideo.pause();
       }
-    });
 
-    if(scrapbookVideo){
-      const pauseMusicForVideo=()=>{
-        if(!backgroundMusic.paused){
-          backgroundMusic.pause();
-          musicToggle.textContent='▶ Music';
+      try {
+        if (backgroundMusic.error) {
+          backgroundMusic.load();
         }
-      };
-      scrapbookVideo.addEventListener('pointerdown',pauseMusicForVideo);
-      scrapbookVideo.addEventListener('touchstart',pauseMusicForVideo,{passive:true});
-      scrapbookVideo.addEventListener('play',()=>{
-        if(!backgroundMusic.paused){
+        await backgroundMusic.play();
+        setMusicButton(true);
+        return true;
+      } catch (error) {
+        console.error('Music playback failed:', error);
+        setMusicButton(false);
+        alert('The song could not load yet. Refresh the page once, then tap Play Music again.');
+        return false;
+      }
+    }
+
+    function pauseMusic(rememberChoice = true) {
+      backgroundMusic.pause();
+      if (rememberChoice) musicWanted = false;
+      setMusicButton(false);
+    }
+
+    async function toggleMusic() {
+      if (backgroundMusic.paused) {
+        await playMusic();
+      } else {
+        pauseMusic(true);
+      }
+    }
+
+    beginLove.addEventListener('click', async () => {
+      loveEntry.classList.add('hidden');
+      await playMusic();
+      setTimeout(() => loveEntry.remove(), 800);
+    });
+
+    musicToggle.addEventListener('click', toggleMusic);
+    if (heroMusicButton) heroMusicButton.addEventListener('click', toggleMusic);
+
+    backgroundMusic.addEventListener('playing', () => setMusicButton(true));
+    backgroundMusic.addEventListener('pause', () => setMusicButton(false));
+    backgroundMusic.addEventListener('error', () => {
+      console.error('Audio error code:', backgroundMusic.error?.code);
+      setMusicButton(false);
+    });
+
+    if (scrapbookVideo) {
+      scrapbookVideo.addEventListener('play', () => {
+        videoIsPlaying = true;
+        if (!backgroundMusic.paused) {
           backgroundMusic.pause();
-          musicToggle.textContent='▶ Music';
+          setMusicButton(false);
         }
       });
-      const resumeBackground=async()=>{
-        if(musicWanted){
-          try{await backgroundMusic.play();musicToggle.textContent='⏸ Music'}catch(e){}
+
+      const resumeMusicAfterVideo = async () => {
+        videoIsPlaying = false;
+        if (musicWanted) {
+          try {
+            await backgroundMusic.play();
+            setMusicButton(true);
+          } catch (error) {
+            console.error('Could not resume music:', error);
+            setMusicButton(false);
+          }
         }
       };
-      scrapbookVideo.addEventListener('pause',resumeBackground);
-      scrapbookVideo.addEventListener('ended',resumeBackground);
+
+      scrapbookVideo.addEventListener('pause', resumeMusicAfterVideo);
+      scrapbookVideo.addEventListener('ended', resumeMusicAfterVideo);
     }
 
     const loader=document.getElementById('loader');window.addEventListener('load',()=>{loader.style.display='none'});
